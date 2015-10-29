@@ -20,4 +20,5 @@ urlpatterns = patterns('',
     (r'^matchActual/$', matchActual),
     (r'^GetChamps/$', GetChamps),
     (r'^GetSpells/$', GetSpells),
+    (r'^UpdateSummoners/$', UpdateSummoners),
 )
