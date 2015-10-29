@@ -67,6 +67,26 @@
 				</div>
 				<!-- /.panel-body -->
 			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-youtube fa-fw"></i> Plays                            
+				</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					{% for x in plays%}
+						
+						<div style="margin-bottom: 7px;" class="row">
+							<div class="col-xs-4">
+								<img style="height: 60px;width: 60px" src="{{x.snippet.thumbnails.default.url}}"/>
+							</div>
+							<div class="col-xs-8">
+								<a href="https://www.youtube.com/watch?v={{x.id.videoId}}"><b>{{x.snippet.title}}</b></a>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+				<!-- /.panel-body -->
+			</div>
 		</div>
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">

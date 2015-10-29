@@ -11,6 +11,7 @@ from django.core.serializers.json import  DjangoJSONEncoder
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import time
+import requests
 
 # Constantes
 w = RiotWatcher(key = settings.RIOT_API_KEY, default_region='lan')
@@ -154,8 +155,16 @@ def SocialHub(request):
 		'CHALLENGER': 'default'
 	}
 
+	plays = requests.get('https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={channelId}&order=date&key={googlekey}'
+						 .format(
+						 	googlekey= settings.GOOGLE_API_KEY, 
+						 	channelId = 'UC_Axbyee5-frfiW5xkZl3ew'
+						 	)
+						 ).json()
+
 	streamers = Streamers.objects.all()
-	return render_to_response('SocialHub.html',{'tc': TiersClasses,'streamers':streamers, 'summoners': summoners}, context_instance = RequestContext(request))
+
+	return render_to_response('SocialHub.html',{'plays':plays['items'], 'tc': TiersClasses,'streamers':streamers, 'summoners': summoners}, context_instance = RequestContext(request))
 
 def getLeagueScore(Tier,Division,LP):
 	Tiers = { 
@@ -208,6 +217,7 @@ def GetChamps(request):
 def GetSpells(request):
 	return HttpResponse(json.dumps(w.static_get_summoner_spell_list(region='na', data_by_id=True)))
 
+@staff_member_required
 @csrf_exempt
 def UpdateSummoners(request):
 	summoners = Summoners.objects.all()
