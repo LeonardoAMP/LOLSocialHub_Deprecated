@@ -1,0 +1,239 @@
+{% extends "_mainLayout.html" %}
+{% load key %}
+{% block content %} 
+<div data-ng-app="SHubApp">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">SOCIAL HUB - LOU</h1>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<!-- /.row -->
+	<div data-ng-controller="controlador1" class="row">
+		<div class="col-lg-8">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-bar-chart-o fa-fw"></i> Ladder                           
+				</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<ul class="list-group">
+						{% for x in summoners %}						
+						<li ng-click="showCurrentMatch({{x.Id}})" class="list-group-item list-group-item-{{ tc|key:x.Tier }}">
+
+							<div class="row">
+
+								<div class="col-xs-1">
+									{{forloop.counter}}
+								</div>
+								<div class="col-xs-4">
+									<p><img style="height:25px;width:25px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/profileicon/{{x.SummonerIcon}}.png"/> {{x.Nombre}}</p>
+								</div>
+								<div class="col-xs-2">
+									<p>
+										Lv {{x.Lv}}
+									</p>
+								</div>
+								<div class="col-xs-4">
+									<p>
+										<img style="height:25px;width:25px;border-radius: 100px" src="/Utilidades/img/tier-icons/tier_icons/{{x.Tier}}_{{x.Division}}.png"/> {{x.Tier}} {{x.Division}} {{x.LP}}LP
+									</p>
+								</div>
+							</div>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+				<!-- /.panel-body -->
+			</div>
+			
+		</div>
+		<div class="col-lg-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-twitch fa-fw"></i> Streams                            
+				</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<ul>
+						<li data-ng-repeat="j in streamers | orderBy:'-link'">
+							{% verbatim %}
+							<p style="margin-bottom: 0px" data-ng-if="j.link == null">{{j.Nombre}}</p>
+							<a href="{{j.link}}" data-ng-if="j.link!=null">{{j.Nombre}} <b>LIVE</b></a>
+							{% endverbatim %}
+						</li>
+					</ul>
+				</div>
+				<!-- /.panel-body -->
+			</div>
+		</div>
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">Match</h4>
+            </div>
+            <div class="modal-body">
+              <div id="matchContainer">
+              	<h3 data-ng-if="modalState == 0">CARGANDO</h3>
+              	<h3 data-ng-if="modalState == 2">No esta en partida</h3>
+              	<div data-ng-if="modalState == 1">
+              		{% verbatim %}
+					<div data-ng-if="$index < 5" data-ng-repeat="x in match.participants" class="row">
+						<div class="col-md-1">
+							<img style="height:25px;width:25px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/profileicon/{{x.profileIconId}}.png"/>
+						</div>
+						<div class="col-md-2">
+							{{x.summonerName}}
+						</div>
+						<div class="col-md-2">
+							<p>
+								<img style="width: 30px;height:30px;" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/spell/{{spells[x.spell1Id].key}}.png"/>
+								<img style="width: 30px;height:30px;" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/spell/{{spells[x.spell2Id].key}}.png"/>
+								<img style="width: 30px;height:30px;border-radius: 100px; margin-left: 20px;" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/champion/{{champs[x.championId].key}}.png"/>
+							</p>
+						</div>							
+						<div class="col-md-2 col-md-offset-2">
+							<p>
+								<img style="width: 30px;height:30px;border-radius: 100px;    margin-right: 20px;" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/champion/{{champs[match.participants[$index+5].championId].key}}.png"/>
+								<img style="width: 30px;height:30px;" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/spell/{{spells[match.participants[$index+5].spell1Id].key}}.png"/>
+								<img style="width: 30px;height:30px;" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/spell/{{spells[match.participants[$index+5].spell2Id].key}}.png"/>
+							</p>
+						</div>
+						<div class="col-md-2">
+							{{match.participants[$index+5].summonerName}}
+						</div>
+						<div class="col-md-1">
+							<img style="height:25px;width:25px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/profileicon/{{match.participants[$index+5].profileIconId}}.png"/>
+						</div>
+					</div>
+					{% endverbatim %}
+				</div>
+			</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+	</div>
+	<!-- /.row -->
+
+
+</div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/Utilidades/angular.min.js"></script>
+<script src="/Utilidades/angular-cookies.min.js"></script>
+
+<script>
+var SHubApp = angular.module('SHubApp', ['ngCookies']);
+
+            SHubApp.config(['$httpProvider', '$interpolateProvider',
+                    function($httpProvider) {
+                        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+                        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+                    }
+                ]);
+SHubApp.controller('controlador1', function ($scope,$http) {
+	$scope.streamers = [];
+	{% for g in streamers %}                      
+	isLive('{{g.Nombre}}');
+	{% endfor %}
+	console.log($scope.streamers);
+
+	$scope.modalState = 0;
+	function isLive(Streamer){
+		$http({
+			dataType: "json",
+			url: 'https://api.twitch.tv/kraken/streams/'+Streamer,
+			method: "POST"
+		}).success(function (response) {
+			console.log(response);
+			if(response.stream != null)
+				$scope.streamers.push({link: response.stream.channel.url,
+					Nombre: response.stream.channel.display_name
+				});
+			else
+				$scope.streamers.push({link: null,
+					Nombre: Streamer
+				});
+
+		}).error(function (error) {
+			console.log(error);
+		});
+
+	}
+
+	$scope.showCurrentMatch = function(id) {
+		$scope.modalState = 0;
+		$('#myModal').modal('show');
+		var ddd = {id: id};
+		$http({			
+			dataType: "json",
+			url: '/matchActual/',
+			method: "POST",
+			data: ddd
+		}).success(function (response) {
+			if(response.Match!=null) {
+				$scope.match = response.Match						
+				$scope.modalState = 1;
+			}
+			else
+				$scope.modalState = 2;
+		}).error(function (error) {
+			console.log(error);
+		});
+
+	}
+
+	$http({			
+		dataType: "json",
+		url: '/GetSpells/',
+		method: "POST"
+	}).success(function (response) {
+		$scope.spells = response.data
+	}).error(function (error) {
+		console.log(error);
+	});
+
+	$http({			
+		dataType: "json",
+		url: '/GetChamps/',
+		method: "POST"
+	}).success(function (response) {
+		$scope.champs = response.data
+	}).error(function (error) {
+		console.log(error);
+	});
+
+});
+</script>
+{% endblock %}
+
+
+
+
+{% block styles %} 
+	<style>
+		.list-group-item-bronze {
+			background-color: rgb(195, 143, 116);
+			color: rgb(107, 42, 8);
+		}
+		.list-group-item-silver {
+			background-color: rgb(204, 204, 204);
+			color: rgb(103, 101, 101);
+		}	
+	</style>
+{% endblock %}
