@@ -14,13 +14,25 @@
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<i class="fa fa-bar-chart-o fa-fw"></i> Ladder                           
+					<i class="fa fa-bar-chart-o fa-fw"></i> Ladder
+					
 				</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
+					<div class="row">
+						<div data-ng-init="Nombre = ''" class="col-md-3">
+							<input data-ng-model="Nombre" type="text" class="form-control pull right input-sm" placeholder="Buscar"/>
+						</div>
+						<div class="col-md-3">
+							<select class="form-control" data-ng-model="Tier">
+								<option value="0">Todos</option>
+								<option value="BRONZE">Bronces</option>
+							</select>
+						</div>
+					</div>
 					<ul class="list-group">
 						{% for x in summoners %}						
-						<li ng-click="showCurrentMatch({{x.Id}})" class="list-group-item list-group-item-{{ tc|key:x.Tier }}">
+						<li data-ng-if="('({{x.Nombre}}'.indexOf(Nombre) > -1) || Nombre == '') && ('{{x.Tier}}' == Tier || Tier == 0)" data-ng-click="showCurrentMatch({{x.Id}})" class="list-group-item list-group-item-{{ tc|key:x.Tier }}">
 
 							<div class="row">
 
@@ -73,8 +85,7 @@
 				</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
-					{% for x in plays%}
-						
+					{% for x in plays%}						
 						<div style="margin-bottom: 7px;" class="row">
 							<div class="col-xs-4">
 								<img style="height: 60px;width: 60px" src="{{x.snippet.thumbnails.default.url}}"/>
