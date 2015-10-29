@@ -1,3 +1,4 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -90,16 +91,22 @@ def get3Mejores(o):
 	return {'p':primero,'s':segundo,'t':tercero}
 
 def AddToHubP(request):
+	summoner = None
+	try:
+		summoner = w.get_summoner(name=request.POST['sname'])
+	except Exception as e:
+		return render_to_response('AddToHub.html', {'Error': True}, context_instance = RequestContext(request))
+		
 
-	summoner = w.get_summoner(name=request.POST['sname'])
 	runas = w.get_rune_pages(summoner_ids=(summoner['id'],), region='lan')
 	error_runas = True
 	for x in runas[str(summoner['id'])]['pages']:
-		if x['name'] == 'LOUHub' #Runepage name Identificator
+		if x['name'] == 'LOLHub': #Runepage name Identificator
 			error_runas = False
 
 	if error_runas:
-		raise LoLException("Debes renombrar una pagina de runas con el nombre LOUHub.","Debes renombrar una pagina de runas con el nombre LOUHub.")
+		return render_to_response('AddToHub.html', {'Error': True}, context_instance = RequestContext(request))
+		# raise LoLException("Debes renombrar una pagina de runas con el nombre LOUHub.","Debes renombrar una pagina de runas con el nombre LOUHub.")
 
 
 	ii = Summoners()
@@ -129,7 +136,7 @@ def AddToHubP(request):
 	return render_to_response('AddToHub.html', context_instance = RequestContext(request))
 
 def AddToHub(request):
-	return render_to_response('AddToHub.html', context_instance = RequestContext(request))
+	return render_to_response('AddToHub.html', {'Error': False}, context_instance = RequestContext(request))
 
 def SocialHub(request):
 	#Order by score
@@ -171,6 +178,7 @@ def getLeagueScore(Tier,Division,LP):
 	return	int(Tiers[Tier]+Divisiones[Division]+alp)
 
 
+@staff_member_required
 def AddToStreamersP(request):
 	s = Streamers()
 	s.Nombre = request.POST['name']
@@ -178,6 +186,7 @@ def AddToStreamersP(request):
 
 	return SocialHub(request)
 
+@staff_member_required
 def AddToStreamers(request):
 	return render_to_response('AddToStreamers.html', context_instance = RequestContext(request))
 
