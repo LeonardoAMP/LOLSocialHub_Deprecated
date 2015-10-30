@@ -155,11 +155,18 @@ def SocialHub(request):
 		'MASTERS': 'default',
 		'CHALLENGER': 'default'
 	})
+	
+	# plays = requests.get('https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={channelId}&order=date&key={googlekey}'
+	# 					 .format(
+	# 					 	googlekey= settings.GOOGLE_API_KEY, 
+	# 					 	channelId = 'UC_Axbyee5-frfiW5xkZl3ew'
+	# 					 	)
+	# 					 ).json()
 
-	plays = requests.get('https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={channelId}&order=date&key={googlekey}'
+	plays = requests.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId={playlistId}&key={googlekey}'
 						 .format(
 						 	googlekey= settings.GOOGLE_API_KEY, 
-						 	channelId = 'UC_Axbyee5-frfiW5xkZl3ew'
+						 	playlistId = 'PLpK9SZ4LA7R2YDzZftvRspn4TMPj6irbV'
 						 	)
 						 ).json()
 
