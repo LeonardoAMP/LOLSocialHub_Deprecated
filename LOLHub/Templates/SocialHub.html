@@ -17,12 +17,12 @@
 					<i class="fa fa-bar-chart-o fa-fw"></i> Ladder
 					
 					<select style="border-radius: 15px; width: 20%;margin-top: -4px;margin-left: 10px;" class="form-control pull-right input-sm" data-ng-model="Tier">
-								<option value="0">Todos</option>
-								{% for mykey,myvalue in tc.items %}
-									<option value="{{mykey}}">{{mykey}}</option>
-								{% endfor %}
-							</select>
-							<input style="border-radius: 15px; width: 20%;margin-top: -4px;" data-ng-model="Nombre" type="text" class="form-control pull-right input-sm" placeholder="Buscar"/>
+						<option value="0">Todos</option>
+						{% for mykey,myvalue in tc.items %}
+							<option value="{{mykey}}">{{mykey}}</option>
+						{% endfor %}
+					</select>
+					<input style="border-radius: 15px; width: 20%;margin-top: -4px;" data-ng-model="Nombre" type="text" class="form-control pull-right input-sm" placeholder="Buscar"/>
 				</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">

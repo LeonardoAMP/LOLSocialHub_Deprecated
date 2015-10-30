@@ -2,6 +2,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from collections import OrderedDict
 from riotwatcher.riotwatcher import RiotWatcher, LoLException, error_404
 from LOLHub.models import *
 from django import template
@@ -144,7 +145,7 @@ def SocialHub(request):
 	summoners = Summoners.objects.order_by('-Score')
 
 
-	TiersClasses = { 
+	TiersClasses = OrderedDict({ 
 		'PROVISIONAL': 'default',
 		'BRONZE': 'bronze', 
 		'SILVER': 'silver',
@@ -153,7 +154,7 @@ def SocialHub(request):
 		'DIAMOND':'primary',
 		'MASTERS': 'default',
 		'CHALLENGER': 'default'
-	}
+	})
 
 	plays = requests.get('https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={channelId}&order=date&key={googlekey}'
 						 .format(
