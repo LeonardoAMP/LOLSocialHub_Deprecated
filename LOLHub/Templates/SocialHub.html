@@ -16,23 +16,27 @@
 				<div class="panel-heading">
 					<i class="fa fa-bar-chart-o fa-fw"></i> Ladder
 					
+					<select style="border-radius: 15px; width: 20%;margin-top: -4px;margin-left: 10px;" class="form-control pull-right input-sm" data-ng-model="Tier">
+								<option value="0">Todos</option>
+								{% for mykey,myvalue in tc.items %}
+									<option value="{{mykey}}">{{mykey}}</option>
+								{% endfor %}
+							</select>
+							<input style="border-radius: 15px; width: 20%;margin-top: -4px;" data-ng-model="Nombre" type="text" class="form-control pull-right input-sm" placeholder="Buscar"/>
 				</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<div class="row">
 						<div data-ng-init="Nombre = ''" class="col-md-3">
-							<input data-ng-model="Nombre" type="text" class="form-control pull right input-sm" placeholder="Buscar"/>
+							
 						</div>
-						<div class="col-md-3">
-							<select class="form-control" data-ng-model="Tier">
-								<option value="0">Todos</option>
-								<option value="BRONZE">Bronces</option>
-							</select>
+						<div data-ng-init="Tier = 0 " class="col-md-3">
+							
 						</div>
 					</div>
 					<ul class="list-group">
 						{% for x in summoners %}						
-						<li data-ng-if="('({{x.Nombre}}'.indexOf(Nombre) > -1) || Nombre == '') && ('{{x.Tier}}' == Tier || Tier == 0)" data-ng-click="showCurrentMatch({{x.Id}})" class="list-group-item list-group-item-{{ tc|key:x.Tier }}">
+						<li data-ng-if="('{{x.Nombre}}'.toLocaleLowerCase().includes(Nombre.toLocaleLowerCase()) || Nombre == '') && ('{{x.Tier}}' == Tier || Tier == 0)" data-ng-click="showCurrentMatch({{x.Id}})" class="list-group-item list-group-item-{{ tc|key:x.Tier }}">
 
 							<div class="row">
 
