@@ -2,6 +2,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from collections import OrderedDict
 from riotwatcher.riotwatcher import RiotWatcher, LoLException, error_404
 from LOLHub.models import *
 from django import template
@@ -11,6 +12,7 @@ from django.core.serializers.json import  DjangoJSONEncoder
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import time
+import requests
 
 # Constantes
 w = RiotWatcher(key = settings.RIOT_API_KEY, default_region='lan')
@@ -133,7 +135,8 @@ def AddToHubP(request):
 	
 	ii.Lv = summoner['summonerLevel']
 	ii.save()
-	return render_to_response('AddToHub.html', context_instance = RequestContext(request))
+	
+	return SocialHub(request)
 
 def AddToHub(request):
 	return render_to_response('AddToHub.html', {'Error': False}, context_instance = RequestContext(request))
@@ -143,19 +146,34 @@ def SocialHub(request):
 	summoners = Summoners.objects.order_by('-Score')
 
 
-	TiersClasses = { 
+	TiersClasses = OrderedDict({ 
 		'PROVISIONAL': 'default',
 		'BRONZE': 'bronze', 
 		'SILVER': 'silver',
 		'GOLD':'warning', 
 		'PLATINUM':'success',
-		'DIAMOND':'primary',
+		'DIAMOND':'info',
 		'MASTERS': 'default',
 		'CHALLENGER': 'default'
-	}
+	})
+	
+	# plays = requests.get('https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={channelId}&order=date&key={googlekey}'
+	# 					 .format(
+	# 					 	googlekey= settings.GOOGLE_API_KEY, 
+	# 					 	channelId = 'UC_Axbyee5-frfiW5xkZl3ew'
+	# 					 	)
+	# 					 ).json()
+
+	plays = requests.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId={playlistId}&key={googlekey}'
+						 .format(
+						 	googlekey= settings.GOOGLE_API_KEY, 
+						 	playlistId = 'PLpK9SZ4LA7R2YDzZftvRspn4TMPj6irbV'
+						 	)
+						 ).json()
 
 	streamers = Streamers.objects.all()
-	return render_to_response('SocialHub.html',{'tc': TiersClasses,'streamers':streamers, 'summoners': summoners}, context_instance = RequestContext(request))
+
+	return render_to_response('SocialHub.html',{'plays':plays['items'], 'tc': TiersClasses,'streamers':streamers, 'summoners': summoners}, context_instance = RequestContext(request))
 
 def getLeagueScore(Tier,Division,LP):
 	Tiers = { 
@@ -193,9 +211,9 @@ def AddToStreamers(request):
 @csrf_exempt
 def matchActual(request):
 	payload = json.loads(request.body.decode('utf-8'))
-	idx = 984986 #payload['id']
+	idx = payload['id']
 	try:
-		m = w.get_current_game(summoner_id = idx, platform_id = 'BR1', region='br')
+		m = w.get_current_game(summoner_id = idx, platform_id = 'LA1', region='lan')
 		return HttpResponse(json.dumps({ 'Match': m }))
 	except: 
 		return HttpResponse(json.dumps({ 'Match': None }))
@@ -208,6 +226,7 @@ def GetChamps(request):
 def GetSpells(request):
 	return HttpResponse(json.dumps(w.static_get_summoner_spell_list(region='na', data_by_id=True)))
 
+@staff_member_required
 @csrf_exempt
 def UpdateSummoners(request):
 	summoners = Summoners.objects.all()

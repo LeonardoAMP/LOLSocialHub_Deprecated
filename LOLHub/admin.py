@@ -1,3 +1,11 @@
 from django.contrib import admin
+from LOLHub import models
 
-# Register your models here.
+class SummonersAdmin(admin.ModelAdmin):
+    pass
+
+class StreamersAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(models.Summoners, SummonersAdmin)
+admin.site.register(models.Streamers, StreamersAdmin)
