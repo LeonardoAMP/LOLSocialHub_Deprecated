@@ -135,7 +135,8 @@ def AddToHubP(request):
 	
 	ii.Lv = summoner['summonerLevel']
 	ii.save()
-	return render_to_response('AddToHub.html', context_instance = RequestContext(request))
+	
+	return SocialHub(request)
 
 def AddToHub(request):
 	return render_to_response('AddToHub.html', {'Error': False}, context_instance = RequestContext(request))
@@ -151,7 +152,7 @@ def SocialHub(request):
 		'SILVER': 'silver',
 		'GOLD':'warning', 
 		'PLATINUM':'success',
-		'DIAMOND':'primary',
+		'DIAMOND':'info',
 		'MASTERS': 'default',
 		'CHALLENGER': 'default'
 	})
@@ -210,9 +211,9 @@ def AddToStreamers(request):
 @csrf_exempt
 def matchActual(request):
 	payload = json.loads(request.body.decode('utf-8'))
-	idx = 984986 #payload['id']
+	idx = payload['id']
 	try:
-		m = w.get_current_game(summoner_id = idx, platform_id = 'BR1', region='br')
+		m = w.get_current_game(summoner_id = idx, platform_id = 'LA1', region='lan')
 		return HttpResponse(json.dumps({ 'Match': m }))
 	except: 
 		return HttpResponse(json.dumps({ 'Match': None }))

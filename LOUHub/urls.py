@@ -10,7 +10,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
 
-    (r'^$', Index),
+    (r'^$', SocialHub),
     (r'^Card/$', StatsCard),
     (r'^AddToHub/$', AddToHub),
     (r'^AddToHubP/$', AddToHubP),
