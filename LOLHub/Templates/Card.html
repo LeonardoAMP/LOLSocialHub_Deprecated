@@ -46,7 +46,7 @@
 			            <div class="col-md-8">			              
 			                    <div class="form-group">
 			                       <label>Nombre de invocador</label>
-			                       <input required min="3" id="sname" name="sname" type="text" class="form-control" placeholder="Nombre de invocador" />
+			                       <input required min="3" id="sname" name="sname" type="text" class="form-control" placeholder="Nombre de invocador" value="{{ sname }}" />
 			                       <small>Ingresa un nombre de invocador valido (de LAN) para generar su carta.</small>
 			                       {% if showError %}<small style="color: red;">El usuario debe tener rank en soloQ</small> {% endif %}
 			                    </div>
@@ -61,7 +61,6 @@
 		</div>
 		<div class="col-md-7">
 			{% if showSC %}
-				<button id="btnSave">Ver imagen</button>
 				<div id="img-out"></div>
 
 				<div id="formulario" style="position:relative">
@@ -144,22 +143,22 @@
 
 		});
 
-		$(function() { 
-		    $("#btnSave").click(function() { 
-		        html2canvas($("#formulario"), {
-		            onrendered: function(canvas) {
-		                //theCanvas = canvas;
-		                document.body.appendChild(canvas);
+		// $(function() { 
+		//     $("#btnSave").click(function() { 
+		//         html2canvas($("#formulario"), {
+		//             onrendered: function(canvas) {
+		//                 //theCanvas = canvas;
+		//                 document.body.appendChild(canvas);
 
-		                // Convert and download as image 
-		                //Canvas2Image.saveAsPNG(canvas); 
-		                $("#img-out").append(canvas);
-		                // Clean up 
-		                //document.body.removeChild(canvas);
-		            }
-		        });
-		    });
-		}); 
+		//                 // Convert and download as image 
+		//                 //Canvas2Image.saveAsPNG(canvas); 
+		//                 $("#img-out").append(canvas);
+		//                 // Clean up 
+		//                 //document.body.removeChild(canvas);
+		//             }
+		//         });
+		//     });
+		// }); 
 
 </script>
 

@@ -22,19 +22,19 @@ def Index(request):
 	return render_to_response('Index.html', context_instance = RequestContext(request))
 
 
-def StatsCard(request,sname=None):	
+def StatsCard(request,sname=''):	
 
-	if sname != None:
+	if sname != '':
 		me = w.get_summoner(name = sname)
 		lEntry = None
 		try:
 			lEntry = w.get_league_entry(summoner_ids=(me['id'],))
 			if(lEntry[str(me['id'])][0]['queue'] != 'RANKED_SOLO_5x5'):
 				# Debe tener ranking en solo Q para poder salir aqui wei
-				return render_to_response('Card.html', {'showSC': False, 'showError': True}, context_instance = RequestContext(request))		
+				return render_to_response('Card.html', {'sname':sname, 'showSC': False, 'showError': True}, context_instance = RequestContext(request))		
 		except LoLException as e:
 			if e.error == error_404:
-				return render_to_response('Card.html', {'showSC': False, 'showError': True}, context_instance = RequestContext(request))		
+				return render_to_response('Card.html', {'sname':sname, 'showSC': False, 'showError': True}, context_instance = RequestContext(request))		
 			else:
 				raise e
 
@@ -75,8 +75,8 @@ def StatsCard(request,sname=None):
 		xd['c']['info'] = champs['data'][str(xd['c']['id'])]
 		xd['c']['kda'] = round((xd['c']['stats']['totalAssists'] + xd['c']['stats']['totalChampionKills']) / float(xd['c']['stats']['totalDeathsPerSession']),2)
 
-		return render_to_response('Card.html', {'showSC': True,'gInfo': gInfo, 'mks':mks,'SubMejores':xd, 'champ':champName, 'SummonerName':me['name'],'profileId':me['profileIconId'], 'Id':me['id'],'Tier':tier,'Division':division}, context_instance = RequestContext(request))
-	return render_to_response('Card.html', {'showSC': False}, context_instance = RequestContext(request))				
+		return render_to_response('Card.html', {'sname':sname, 'showSC': True,'gInfo': gInfo, 'mks':mks,'SubMejores':xd, 'champ':champName, 'SummonerName':me['name'],'profileId':me['profileIconId'], 'Id':me['id'],'Tier':tier,'Division':division}, context_instance = RequestContext(request))
+	return render_to_response('Card.html', {'sname':sname, 'showSC': False}, context_instance = RequestContext(request))				
 
 def Resumir(o):
 	size = len(o)
