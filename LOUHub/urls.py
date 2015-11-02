@@ -12,6 +12,7 @@ urlpatterns = patterns('',
 
     (r'^$', SocialHub),
     (r'^Card/$', StatsCard),
+    (r'^Card/(?P<sname>\w{0,50})/$', StatsCard),
     (r'^AddToHub/$', AddToHub),
     (r'^AddToHubP/$', AddToHubP),
     (r'^SocialHub/$', SocialHub),

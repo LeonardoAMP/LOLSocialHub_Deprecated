@@ -35,96 +35,134 @@
 		<!-- /.col-lg-12 -->
 	</div>
 
-	<div style="position:relative">
-		<div class="backImg">
+	<div class="row">
+		<div class="col-md-5">
+			<div class="panel panel-default">
+			    <div class="panel-heading">
+			        Invocador
+			    </div>
+			    <div class="panel-body">
+			        <div class="row">
+			            <div class="col-md-8">			              
+			                    <div class="form-group">
+			                       <label>Nombre de invocador</label>
+			                       <input required min="3" id="sname" name="sname" type="text" class="form-control" placeholder="Nombre de invocador" />
+			                       <small>Ingresa un nombre de invocador valido (de LAN) para generar su carta.</small>
+			                       {% if showError %}<small style="color: red;">El usuario debe tener rank en soloQ</small> {% endif %}
+			                    </div>
+			                    
+			                    <button id="btnEnviar" class="btn btn-primary"/>Someter</button>
+			            </div>
+			        </div>
+			        <!-- /.row (nested) -->
+			    </div>
+			    <!-- /.panel-body -->
+			</div>
 		</div>
-		<div class="CardContent">
-			<!-- <img src="http://ddragon.leagueoflegends.com/cdn/img/champion/loading/{{champ}}_0.jpg" style="float: left"/> -->
-			<div>
-					<img class="fancyBG" style="height:70px;width: 70px;float: right" src="/Utilidades/img/tier-icons/tier_icons/{{Tier.lower}}_{{Division.lower}}.png"/>
-					<div style="clear:both;"></div>
-			</div>
-			<div>
-				<img class="fancyBG" style="height:95px;width:95px;border-radius: 100px;display: block ;margin: 0 auto;" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/profileicon/{{profileId}}.png"/>
-			</div>
-			<div class="text-center fancyBGText">
-				<h3 style="margin:0px;">{{SummonerName}}</h3>
-			</div>
-			<div class="text-center fancyBGText">
-				W<label style="color:green">{{gInfo.w}}</label>/L<label style="color:red">{{gInfo.l}}</label> R: {{gInfo.wlRatio}}%
-			</div>
-			<br/>
-			<div class="fancyBGText">
-				<label>DD:</label><label>{{mks.d}}</label>
-				<br/>
-				<label>TTT:</label><label>{{mks.t}}</label>
-				<br/>
-				<label>QQQQ:</label><label>{{mks.q}}</label>
-				<br/>
-				<label>PPPPP:</label><label>{{mks.p}}</label>
-			</div>
-			<br/>
-			<br/>
-			<div style="position: absolute; bottom: 0px;" class="container-fluid">
-			<div class="row text-center fancyBGText">
-				<div class="col-xs-4">
-					
-					<img style="width: 80px;height:80px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/champion/{{SubMejores.p.info.name}}.png"/>
-					<br/>
-					<label>{{SubMejores.p.kda}}</label>
-				</div>
-				<div class="col-xs-4">
-					<img style="width: 80px;height:80px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/champion/{{SubMejores.s.info.name}}.png"/>
-					<br/>
-					<label>{{SubMejores.s.kda}}</label>
-				</div>
-				<div class="col-xs-4">
-					<img style="width: 80px;height:80px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/champion/{{SubMejores.t.info.name}}.png"/>
-					<br/>
-					<label>{{SubMejores.t.kda}}</label>
-				</div>
-			</div>
+		<div class="col-md-7">
+			{% if showSC %}
+				<button id="btnSave">Ver imagen</button>
+				<div id="img-out"></div>
 
+				<div id="formulario" style="position:relative">
 
-							
-				<!-- <div class="row">
-					<div class="col-xs-offset-4 col-xs-2">
-						<img class="fancyBG" style="height:95px;width:95px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/profileicon/{{profileId}}.png"/>
+					<div class="backImg">
 					</div>
-				</div> -->
-				<!-- <div class="row" style="margin-top: 10px;">
-					<div class="col-xs-12 text-center fancyBGText">
-						<h3 style="margin:0px;">{{SummonerName}}</h3>
-					</div>
-				</div> -->
-				<!-- <div class="row">
-					<div class="col-xs-12 text-center fancyBGText">
-						W<label style="color:green">{{gInfo.w}}</label>/L<label style="color:red">{{gInfo.l}}</label> R: {{gInfo.wlRatio}}%
-					</div>
-				</div> -->
-				<!-- <br/>
-				<div class="row fancyBGText">
-					<div class="col-xs-12">
-						<label>DD:</label><label>{{mks.d}}</label>
+					<div class="CardContent">
+						<!-- <img src="http://ddragon.leagueoflegends.com/cdn/img/champion/loading/{{champ}}_0.jpg" style="float: left"/> -->
+						<div>
+								<img class="fancyBG" style="height:70px;width: 70px;float: right" src="/Utilidades/img/tier-icons/tier_icons/{{Tier.lower}}_{{Division.lower}}.png"/>
+								<div style="clear:both;"></div>
+						</div>
+						<div>
+							<img class="fancyBG" style="height:95px;width:95px;border-radius: 100px;display: block ;margin: 0 auto;box-shadow: 9px 7px 5px black;" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/profileicon/{{profileId}}.png"/>
+						</div>
+						<div style="margin-top: 20px;" class="text-center fancyBGText">
+							<h2 style="margin:0px;">{{SummonerName}}</h3>
+						</div>
+						<div class="text-center fancyBGText">
+							W<label style="color:green">{{gInfo.w}}</label>/L<label style="color:red">{{gInfo.l}}</label> R: {{gInfo.wlRatio}}%
+						</div>
+						<br/>
+						<div class="fancyBGText">
+							<label>Dobles: {{mks.d}}</label>
+							<br/>
+							<label>Triples: {{mks.t}}</label>
+							<br/>
+							<label>Quadras: {{mks.q}}</label>
+							<br/>
+							<label>Pentas: {{mks.p}}</label>
+						</div>
+						<br/>
+						<br/>
+						<div style="position: absolute; bottom: 0px;" class="container-fluid">
+							<div class="row text-center fancyBGText">
+								<div class="col-xs-4">
+									
+									<img style="width: 80px;height:80px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/champion/{{SubMejores.s.info.key}}.png"/>
+									<br/>
+									<label>{{SubMejores.s.kda}}</label>
+								</div>
+								<div class="col-xs-4">
+									<img style="width: 80px;height:80px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/champion/{{SubMejores.t.info.key}}.png"/>
+									<br/>
+									<label>{{SubMejores.t.kda}}</label>
+								</div>
+								<div class="col-xs-4">
+									<img style="width: 80px;height:80px;border-radius: 100px" src="http://ddragon.leagueoflegends.com/cdn/5.21.1/img/champion/{{SubMejores.c.info.key}}.png"/>
+									<br/>
+									<label>{{SubMejores.c.kda}}</label>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="row fancyBGText">
-					<div class="col-xs-12">
-						<label>TTT:</label><label>{{mks.t}}</label>
-					</div>
-				</div>
-				<div class="row fancyBGText">
-					<div class="col-xs-12">
-						<label>QQQQ:</label><label>{{mks.q}}</label>
-					</div>
-				</div>
-				<div class="row fancyBGText">
-					<div class="col-xs-12">
-						<label>PPPPP:</label><label>{{mks.p}}</label>
-					</div>
-				</div> -->
-				
-			</div>
+			{% endif %}		
 		</div>
 	</div>
+
+	
+{% endblock %}
+
+{% block scripts %}
+<script src="https://github.com/niklasvh/html2canvas/releases/download/0.4.1/html2canvas.js"></script>
+<!-- <script src="http://www.nihilogic.dk/labs/canvas2image/base64.js"></script>
+<script src="http://www.nihilogic.dk/labs/canvas2image/canvas2image.js"></script> -->
+<script type="text/javascript">
+		$(function(){
+			{% if showSC %}
+
+				
+			{% endif %}
+
+			$('#btnEnviar').click(function(){
+				if($('#sname').val().trim() == '' || $('#sname').val().trim() == undefined)
+					alert('Ingrese un nombre de invocador')
+				else
+					window.window.location.href = '/Card/' + $('#sname').val();
+			});
+
+		});
+
+		$(function() { 
+		    $("#btnSave").click(function() { 
+		        html2canvas($("#formulario"), {
+		            onrendered: function(canvas) {
+		                //theCanvas = canvas;
+		                document.body.appendChild(canvas);
+
+		                // Convert and download as image 
+		                //Canvas2Image.saveAsPNG(canvas); 
+		                $("#img-out").append(canvas);
+		                // Clean up 
+		                //document.body.removeChild(canvas);
+		            }
+		        });
+		    });
+		}); 
+
+</script>
+
+
+
 {% endblock %}
