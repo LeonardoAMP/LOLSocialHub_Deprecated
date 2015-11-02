@@ -138,7 +138,7 @@
 				if($('#sname').val().trim() == '' || $('#sname').val().trim() == undefined)
 					alert('Ingrese un nombre de invocador')
 				else
-					window.window.location.href = '/Card/' + $('#sname').val();
+					window.window.location.href = '/Card/' + $('#sname').val().toLowerCase();
 			});
 
 		});
