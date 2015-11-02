@@ -12,7 +12,7 @@ Con eso ya deberian ejecutar el proyecto como cualquier otro de Django.
 
 ## Notas
 
-El template que se esta usando por default se llama SB Admin y lo pueden encontrar en la siguiente pagina: http://startbootstrap.com/template-overviews/sb-admin/
+El template que se esta usando por default se llama SB Admin 2 y lo pueden encontrar en la siguiente pagina: http://startbootstrap.com/template-overviews/sb-admin-2/
 
 
 -Leonardo 'DeepBlaze' Mota

@@ -22,75 +22,102 @@ def Index(request):
 	return render_to_response('Index.html', context_instance = RequestContext(request))
 
 
-def StatsCard(request):	
-	me = w.get_summoner(name='DeepBlaze')
+def StatsCard(request,sname=''):	
 
-	lEntry = w.get_league_entry(summoner_ids=(me['id'],))
-	tier = lEntry[str(me['id'])][0]['tier']
-	wins = lEntry[str(me['id'])][0]['entries'][0]['wins']
-	losses = lEntry[str(me['id'])][0]['entries'][0]['losses']
-	WLR = round((wins / float((wins+losses)) ) * 100,2)
-	lp = lEntry[str(me['id'])][0]['entries'][0]['leaguePoints']
-	division = lEntry[str(me['id'])][0]['entries'][0]['division']
-	rankedstats = w.get_ranked_stats(summoner_id=me['id'])
-	champ0Id = rankedstats['champions'][0]['id']
-	champInfo = w.static_get_champion(champ_id=champ0Id,region='lan', champ_data=('image',))
-	champName = champInfo['name']
-	# static_get_champion(self, champ_id, region=None, locale=None, version=None, champ_data=None):
-	xd = get3Mejores(rankedstats['champions']);
-	#print xd
-	kda = round((rankedstats['champions'][len(rankedstats['champions']) - 1]['stats']['totalAssists'] + rankedstats['champions'][len(rankedstats['champions']) - 1]['stats']['totalChampionKills']) / float(rankedstats['champions'][len(rankedstats['champions']) - 1]['stats']['totalDeathsPerSession']) ,2)
-	td = rankedstats['champions'][len(rankedstats['champions']) - 1]['stats']['totalDoubleKills'] 
-	tt = rankedstats['champions'][len(rankedstats['champions']) - 1]['stats']['totalTripleKills']
-	tq = rankedstats['champions'][len(rankedstats['champions']) - 1]['stats']['totalQuadraKills'] 
-	tp = rankedstats['champions'][len(rankedstats['champions']) - 1]['stats']['totalPentaKills']
-	
+	if sname != '':
+		me = w.get_summoner(name = sname)
+		lEntry = None
+		try:
+			lEntry = w.get_league_entry(summoner_ids=(me['id'],))
+			if(lEntry[str(me['id'])][0]['queue'] != 'RANKED_SOLO_5x5'):
+				# Debe tener ranking en solo Q para poder salir aqui wei
+				return render_to_response('Card.html', {'sname':sname, 'showSC': False, 'showError': True}, context_instance = RequestContext(request))		
+		except LoLException as e:
+			if e.error == error_404:
+				return render_to_response('Card.html', {'sname':sname, 'showSC': False, 'showError': True}, context_instance = RequestContext(request))		
+			else:
+				raise e
 
-	gInfo ={'w':wins,'l':losses,'wlRatio':WLR, 'kda':kda}
-	mks = {'d':td,'t':tt,'q':tq,'p':tp}
+		tier = lEntry[str(me['id'])][0]['tier']
+		wins = lEntry[str(me['id'])][0]['entries'][0]['wins']
+		losses = lEntry[str(me['id'])][0]['entries'][0]['losses']
+		WLR = round((wins / float((wins+losses)) ) * 100,2)
+		lp = lEntry[str(me['id'])][0]['entries'][0]['leaguePoints']
+		division = lEntry[str(me['id'])][0]['entries'][0]['division']
+		rankedstats = w.get_ranked_stats(summoner_id=me['id'])
+		#champ0Id = rankedstats['champions'][0]['id']
+		#champInfo = w.static_get_champion(champ_id=champ0Id,region='lan', champ_data=('image',))
+		xd = Resumir(rankedstats['champions'])
+		
+		
+		# static_get_champion(self, champ_id, region=None, locale=None, version=None, champ_data=None):
+		
+		#print xd
+		kda = round((xd['r']['stats']['totalAssists'] + xd['r']['stats']['totalChampionKills']) / float(xd['r']['stats']['totalDeathsPerSession']) ,2)
+		td = xd['r']['stats']['totalDoubleKills'] 
+		tt = xd['r']['stats']['totalTripleKills']
+		tq = xd['r']['stats']['totalQuadraKills'] 
+		tp = xd['r']['stats']['totalPentaKills']
+		
 
-	xd['p']['info'] = w.static_get_champion(champ_id=xd['p']['id'],region='lan')
-	xd['p']['kda'] = round((xd['p']['stats']['totalAssists'] + xd['p']['stats']['totalChampionKills']) / float(xd['p']['stats']['totalDeathsPerSession']),2) 
+		gInfo ={'w':wins,'l':losses,'wlRatio':WLR, 'kda':kda}
+		mks = {'d':td,'t':tt,'q':tq,'p':tp}
+		champs = w.static_get_champion_list(region='na', data_by_id=True)
 
-	xd['s']['info'] = w.static_get_champion(champ_id=xd['s']['id'],region='lan')
-	xd['s']['kda'] = round((xd['s']['stats']['totalAssists'] + xd['s']['stats']['totalChampionKills']) / float(xd['s']['stats']['totalDeathsPerSession']),2)
+		champName = champs['data'][str(xd['p']['id'])]['key']
 
-	xd['t']['info'] = w.static_get_champion(champ_id=xd['t']['id'],region='lan')
-	xd['t']['kda'] = round((xd['t']['stats']['totalAssists'] + xd['t']['stats']['totalChampionKills']) / float(xd['t']['stats']['totalDeathsPerSession']),2)
+		xd['s']['info'] = champs['data'][str(xd['s']['id'])]
+		xd['s']['kda'] = round((xd['s']['stats']['totalAssists'] + xd['s']['stats']['totalChampionKills']) / float(xd['s']['stats']['totalDeathsPerSession']),2) 
 
-	return render_to_response('Card.html', {'gInfo': gInfo, 'mks':mks,'SubMejores':xd, 'champ':champName, 'SummonerName':me['name'],'profileId':me['profileIconId'], 'Id':me['id'],'Tier':tier,'Division':division}, context_instance = RequestContext(request))	
+		xd['t']['info'] = champs['data'][str(xd['t']['id'])]
+		xd['t']['kda'] = round((xd['t']['stats']['totalAssists'] + xd['t']['stats']['totalChampionKills']) / float(xd['t']['stats']['totalDeathsPerSession']),2)
 
-def get3Mejores(o):
+		xd['c']['info'] = champs['data'][str(xd['c']['id'])]
+		xd['c']['kda'] = round((xd['c']['stats']['totalAssists'] + xd['c']['stats']['totalChampionKills']) / float(xd['c']['stats']['totalDeathsPerSession']),2)
+
+		return render_to_response('Card.html', {'sname':sname, 'showSC': True,'gInfo': gInfo, 'mks':mks,'SubMejores':xd, 'champ':champName, 'SummonerName':me['name'],'profileId':me['profileIconId'], 'Id':me['id'],'Tier':tier,'Division':division}, context_instance = RequestContext(request))
+	return render_to_response('Card.html', {'sname':sname, 'showSC': False}, context_instance = RequestContext(request))				
+
+def Resumir(o):
 	size = len(o)
 	primero = 0
 	segundo = 0
 	tercero = 0
+	cuarto = 0
 	s = 0
-
-	if size > 1:
-		primero = o[1]
-		s = 2
-		if size > 2:
-			segundo = o[2]
-			s = 3
-			if size > 3:
-				tercero = o[3]
-				s = 4
+	resumen = 0
+	# if size > 1:
+	# 	primero = o[1]
+	# 	s = 2
+	# 	if size > 2 and o[2]['id'] != 0:
+	# 		if()
+	# 		segundo = o[2]
+	# 		s = 3
+	# 		if size > 3:
+	# 			if(o[3]['id'] != 0)
+	# 				tercero = o[3]
+	# 			s = 4
 	
 	for x in range(s, size-1):
-		tag = None
-		
-		if  o[x]['stats']['totalSessionsPlayed'] > primero['stats']['totalSessionsPlayed']:
-			primero,o[x] = o[x],primero
+		if o[x]['id'] != 0:
+			tag = None
+			
+			if primero == 0 or o[x]['stats']['totalSessionsPlayed'] > primero['stats']['totalSessionsPlayed']:
+				primero,o[x] = o[x],primero
 
+			if size > 1 and (segundo == 0 or o[x]['stats']['totalSessionsPlayed'] > segundo['stats']['totalSessionsPlayed']):
+				segundo,o[x] = o[x],segundo
 
-		if s > 1 and  o[x]['stats']['totalSessionsPlayed'] > segundo['stats']['totalSessionsPlayed']:
-			segundo,o[x] = o[x],segundo
+			if size > 2 and (tercero == 0 or o[x]['stats']['totalSessionsPlayed'] > tercero['stats']['totalSessionsPlayed']):
+				tercero,o[x] = o[x],tercero
 
-		if s > 2 and o[x]['stats']['totalSessionsPlayed'] > tercero['stats']['totalSessionsPlayed']:
-			tercero,o[x] = o[x],tercero
+			if size > 3 and (cuarto == 0 or o[x]['stats']['totalSessionsPlayed'] > cuarto['stats']['totalSessionsPlayed']):
+				cuarto,o[x] = o[x],cuarto
+		else:
+			resumen = o[x]
 
-	return {'p':primero,'s':segundo,'t':tercero}
+	return {'p':primero,'s':segundo,'t':tercero, 'c': cuarto, 'r': resumen}
+
 
 def AddToHubP(request):
 	summoner = None
