@@ -23,7 +23,6 @@ def Index(request):
 
 
 def StatsCard(request,sname=''):	
-
 	if sname != '':
 		me = w.get_summoner(name = sname)
 		lEntry = None
@@ -98,29 +97,31 @@ def Resumir(o):
 	# 				tercero = o[3]
 	# 			s = 4
 	
-	for x in range(s, size-1):
-		if o[x]['id'] != 0:
+	for x in o:
+		print x['id']
+		if x['id'] != 0:
 			tag = None
 			
-			if primero == 0 or o[x]['stats']['totalSessionsPlayed'] > primero['stats']['totalSessionsPlayed']:
-				primero,o[x] = o[x],primero
+			if primero == 0 or x['stats']['totalSessionsPlayed'] > primero['stats']['totalSessionsPlayed']:
+				primero,x = x,primero
 
-			if size > 1 and (segundo == 0 or o[x]['stats']['totalSessionsPlayed'] > segundo['stats']['totalSessionsPlayed']):
-				segundo,o[x] = o[x],segundo
+			if size > 1 and (segundo == 0 or x['stats']['totalSessionsPlayed'] > segundo['stats']['totalSessionsPlayed']):
+				segundo,x = x,segundo
 
-			if size > 2 and (tercero == 0 or o[x]['stats']['totalSessionsPlayed'] > tercero['stats']['totalSessionsPlayed']):
-				tercero,o[x] = o[x],tercero
+			if size > 2 and (tercero == 0 or x['stats']['totalSessionsPlayed'] > tercero['stats']['totalSessionsPlayed']):
+				tercero,x = x,tercero
 
-			if size > 3 and (cuarto == 0 or o[x]['stats']['totalSessionsPlayed'] > cuarto['stats']['totalSessionsPlayed']):
-				cuarto,o[x] = o[x],cuarto
+			if size > 3 and (cuarto == 0 or x['stats']['totalSessionsPlayed'] > cuarto['stats']['totalSessionsPlayed']):
+				cuarto,x = x,cuarto
 		else:
-			resumen = o[x]
+			resumen = x
 
 	return {'p':primero,'s':segundo,'t':tercero, 'c': cuarto, 'r': resumen}
 
 
 def AddToHubP(request):
 	summoner = None
+	#print request.POST['sname']
 	try:
 		summoner = w.get_summoner(name=request.POST['sname'])
 	except Exception as e:
