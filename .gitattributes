@@ -1,1 +1,3 @@
 LOLHub/Utilidades/* linguist-vendored
+*.html linguist-vendored
+LOLHub/Templates/* linguist-vendored=false
